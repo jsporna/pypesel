@@ -1,0 +1,6 @@
+-r ./requirements.txt
+flake8
+coverage
+pytest
+pytest-cov
+pytest-assume
