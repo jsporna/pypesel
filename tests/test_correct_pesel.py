@@ -1,26 +1,36 @@
 from pesel import Pesel
-import unittest
+import pytest
 
 
-class CorrectPeselTestCase(unittest.TestCase):
-    def setUp(self) -> None:
-        self.value = "65432101239"
-        self.pesel = Pesel(self.value)
+@pytest.fixture(scope='session', params=["65432101239"])
+def pesel_value(request):
+    return request.param
 
-    def test_correct_pesel(self):
-        self.assertEqual(self.pesel.value, self.value)
 
-    def test_correct_pesel_gender(self):
-        self.assertEqual(self.pesel.gender, 'male')
+@pytest.fixture(scope='session')
+def pesel_obj(pesel_value):
+    return Pesel(pesel_value)
 
-    def test_correct_pesel_male(self):
-        self.assertTrue(self.pesel.male)
 
-    def test_correct_pesel_year(self):
-        self.assertEqual(self.pesel.year, 2165)
+def test_correct_pesel(pesel_obj, pesel_value):
+    pytest.assume(pesel_obj.value == pesel_value)
 
-    def test_correct_pesel_month(self):
-        self.assertEqual(self.pesel.month, 3)
 
-    def test_incorrect_pesel_day(self):
-        self.assertEqual(self.pesel.day, 21)
+def test_correct_pesel_gender(pesel_obj):
+    pytest.assume(pesel_obj.gender == 'male')
+
+
+def test_correct_pesel_male(pesel_obj):
+    pytest.assume(pesel_obj.male is True)
+
+
+def test_correct_pesel_year(pesel_obj):
+    pytest.assume(pesel_obj.year == 2165)
+
+
+def test_correct_pesel_month(pesel_obj):
+    pytest.assume(pesel_obj.month == 3)
+
+
+def test_incorrect_pesel_day(pesel_obj):
+    pytest.assume(pesel_obj.day == 21)
