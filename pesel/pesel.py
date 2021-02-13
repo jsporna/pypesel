@@ -139,23 +139,36 @@ class Pesel:
 
         gender = int(male) if male is not None else random.randint(0, 1)
 
-        year = year if year is not None else random.randint(Pesel.YEAR_MIN, Pesel.YEAR_MAX)
-        if not Pesel.YEAR_MIN <= year <= Pesel.YEAR_MAX:
+        _year = year if year is not None else random.randint(Pesel.YEAR_MIN, Pesel.YEAR_MAX)
+        if not Pesel.YEAR_MIN <= _year <= Pesel.YEAR_MAX:
             raise ValueError(f'Year should have value between {Pesel.YEAR_MIN} & {Pesel.YEAR_MAX}')
 
-        month = month if month is not None else random.randint(1, 12)
-        if not 1 <= month <= 12:
+        _month = month if month is not None else random.randint(1, 12)
+        if not 1 <= _month <= 12:
             raise ValueError('Month should have value between 1 and 12')
 
-        max_day = calendar.monthrange(year, month)[1]
-        day = day if day is not None else random.randint(1, max_day)
-        if not 1 <= day <= max_day:
+        max_day = calendar.monthrange(_year, _month)[1]
+        if day and not month and day > max_day:
+            if day == 31:
+                _month = random.choice((1, 3, 5, 7, 8, 10, 12))
+            if day == 30:
+                _month = random.choice((1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+
+        if day == 29 and not year and day > max_day:
+            while True:
+                _year = random.randint(Pesel.YEAR_MIN, Pesel.YEAR_MAX)
+                if calendar.isleap(_year):
+                    break
+
+        max_day = calendar.monthrange(_year, _month)[1]
+        _day = day if day is not None else random.randint(1, max_day)
+        if not 1 <= _day <= max_day:
             raise ValueError('Day should have value between 1 and {}'.format(max_day))
 
         pesel = "{:02d}{:02d}{:02d}{:03d}{}".format(
-            year % 100,
-            month + Pesel.__month_offset(year),
-            day,
+            _year % 100,
+            _month + Pesel.__month_offset(_year),
+            _day,
             random.randint(0, 999),
             random.randrange(gender, 10, 2))
         pesel += Pesel.checksum(pesel)
