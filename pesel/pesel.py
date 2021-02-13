@@ -2,12 +2,15 @@
 
 import random
 from datetime import datetime
+import calendar
 
 
 class Pesel:
     """Pesel Class to serve or generate PESEL number"""
-    YEAR_MIN = 1900
-    YEAR_MAX = 2399
+    YEAR_BASE = 1900
+    YEAR_MIN = 1800
+    YEAR_MAX = 2299
+    CYCLE_SIZE = 500
     WEIGHTS = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
 
     def __init__(self, pesel):
@@ -28,6 +31,8 @@ class Pesel:
         :return: True if PESEL number is valid else False
         :rtype: bool
         """
+        if isinstance(pesel, int):
+            pesel = str(pesel)
         if not (pesel.isdigit() and len(pesel) == 11):
             return False
         if Pesel.checksum(pesel) != pesel[-1]:
@@ -43,7 +48,10 @@ class Pesel:
         year = int(self._pesel[:2])
         month = int(self._pesel[2:4])
         offset = month - month % 20
-        return Pesel.YEAR_MIN + 5 * offset + year
+        calculated_year = Pesel.YEAR_BASE + 5 * offset + year
+        return calculated_year \
+            if calculated_year <= Pesel.YEAR_MAX \
+            else calculated_year - Pesel.CYCLE_SIZE
 
     @property
     def month(self) -> int:
@@ -89,7 +97,7 @@ class Pesel:
         return self._pesel
 
     def __repr__(self):
-        return self._pesel
+        return f'{self.__class__.__name__}("{self._pesel}")'
 
     @staticmethod
     def checksum(pesel):
@@ -107,20 +115,9 @@ class Pesel:
         return str((10 - (checksum % 10)) % 10)
 
     @staticmethod
-    def __is_leap_year(year):
-        return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
-
-    @staticmethod
-    def __max_day(year, month):
-        if month in (1, 3, 5, 7, 8, 10, 12):
-            return 31
-        if month in (4, 6, 9, 11):
-            return 30
-        return 28 + int(Pesel.__is_leap_year(year))
-
-    @staticmethod
     def __month_offset(year):
-        return (year // 100 - 4) % 5 * 20
+        calculated_offset = (year // 100 - 4) % 5 * 20
+        return calculated_offset if calculated_offset >= 0 else 100 + calculated_offset
 
     @classmethod
     def generate(cls, male: bool = None,
@@ -150,10 +147,10 @@ class Pesel:
         if not 1 <= month <= 12:
             raise ValueError('Month should have value between 1 and 12')
 
-        max_day = Pesel.__max_day(year, month)
+        max_day = calendar.monthrange(year, month)[1]
         day = day if day is not None else random.randint(1, max_day)
-        if not 1 <= day <= Pesel.__max_day(year, month):
-            raise ValueError(f'Day should have value between 1 and {max_day}')
+        if not 1 <= day <= max_day:
+            raise ValueError('Day should have value between 1 and {}'.format(max_day))
 
         pesel = "{:02d}{:02d}{:02d}{:03d}{}".format(
             year % 100,
