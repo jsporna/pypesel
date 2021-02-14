@@ -1,7 +1,7 @@
 """Implementation module of Pesel Class"""
 
 import random
-from datetime import datetime
+import time
 import calendar
 
 
@@ -135,7 +135,7 @@ class Pesel:
         :return: instance of class Pesel
         :rtype: pesel.Pesel
         """
-        random.seed(datetime.now())
+        random.seed(time.time())
 
         gender = int(male) if male is not None else random.randint(0, 1)
 

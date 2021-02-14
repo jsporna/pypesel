@@ -1,9 +1,9 @@
 from pesel.main import cli
 import pytest
 import random
-from datetime import datetime
+import time
 
-random.seed(datetime.now())
+random.seed(time.time())
 
 
 @pytest.mark.parametrize('mock', [_ for _ in range(10)])
