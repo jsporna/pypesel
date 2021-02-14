@@ -26,7 +26,7 @@ pesel = Pesel("65432101239")
 There are 2 commands: `generate` & `validate`
 
 ```shell
-❯ pesel generate --help                                                                                                                                                                       16:15:06   
+❯ pesel generate --help
 usage: pesel generate [-h] [--year YEAR] [--month MONTH] [--day DAY] [--male | --female]
 
 optional arguments:
@@ -40,12 +40,12 @@ optional arguments:
 ```
 
 ```shell
-❯ pesel generate                                                                                                                                                                              16:15:44   
+❯ pesel generate  
 62512426682
 ```
 
 ```shell
-❯ pesel validate --help                                                                                                                                                                       16:15:16   
+❯ pesel validate --help  
 usage: pesel validate [-h] pesel
 
 positional arguments:
