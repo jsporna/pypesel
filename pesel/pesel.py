@@ -75,7 +75,15 @@ class Pesel:
         :return: True if PESEL number describes male person else False
         :rtype: bool
         """
-        return bool(int(self._pesel[-2]) % 2)
+        return self.gender == "male"
+
+    @property
+    def female(self) -> bool:
+        """Get if PESEL number describes female person
+        :return: True if PESEL number describes female person else False
+        :rtype: bool
+        """
+        return self.gender == "female"
 
     @property
     def gender(self) -> str:
