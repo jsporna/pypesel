@@ -3,15 +3,19 @@
 import random
 from datetime import datetime
 import calendar
+from enum import Enum
 
 
-class Pesel:
-    """Pesel Class to serve or generate PESEL number"""
+class PeselConst(Enum):
     YEAR_BASE = 1900
     YEAR_MIN = 1800
     YEAR_MAX = 2299
     CYCLE_SIZE = 500
-    WEIGHTS = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
+    WEIGHTS = (1, 3, 7, 9, 1, 3, 7, 9, 1, 3)
+
+
+class Pesel:
+    """Pesel Class to serve or generate PESEL number"""
 
     def __init__(self, pesel):
         """Create a new PESEL instance
@@ -48,10 +52,10 @@ class Pesel:
         year = int(self._pesel[:2])
         month = int(self._pesel[2:4])
         offset = month - month % 20
-        calculated_year = Pesel.YEAR_BASE + 5 * offset + year
+        calculated_year = PeselConst.YEAR_BASE.value + 5 * offset + year
         return calculated_year \
-            if calculated_year <= Pesel.YEAR_MAX \
-            else calculated_year - Pesel.CYCLE_SIZE
+            if calculated_year <= PeselConst.YEAR_MAX.value \
+            else calculated_year - PeselConst.CYCLE_SIZE.value
 
     @property
     def month(self) -> int:
@@ -111,7 +115,7 @@ class Pesel:
             raise ValueError("Pesel should have 10 or 11 digits")
         checksum = 0
         for index, value in enumerate(pesel[:10]):
-            checksum += Pesel.WEIGHTS[index] * int(value)
+            checksum += PeselConst.WEIGHTS.value[index] * int(value)
         return str((10 - (checksum % 10)) % 10)
 
     @staticmethod
@@ -139,9 +143,9 @@ class Pesel:
 
         gender = int(male) if male is not None else random.randint(0, 1)
 
-        _year = year if year is not None else random.randint(Pesel.YEAR_MIN, Pesel.YEAR_MAX)
-        if not Pesel.YEAR_MIN <= _year <= Pesel.YEAR_MAX:
-            raise ValueError(f'Year should have value between {Pesel.YEAR_MIN} & {Pesel.YEAR_MAX}')
+        _year = year if year is not None else random.randint(PeselConst.YEAR_MIN.value, PeselConst.YEAR_MAX.value)
+        if not PeselConst.YEAR_MIN.value <= _year <= PeselConst.YEAR_MAX.value:
+            raise ValueError(f'Year should have value between {PeselConst.YEAR_MIN.value} & {PeselConst.YEAR_MAX.value}')
 
         _month = month if month is not None else random.randint(1, 12)
         if not 1 <= _month <= 12:
@@ -156,7 +160,7 @@ class Pesel:
 
         if day == 29 and not year and day > max_day:
             while True:
-                _year = random.randint(Pesel.YEAR_MIN, Pesel.YEAR_MAX)
+                _year = random.randint(PeselConst.YEAR_MIN.value, PeselConst.YEAR_MAX.value)
                 if calendar.isleap(_year):
                     break
 

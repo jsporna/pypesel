@@ -1,4 +1,4 @@
-from pesel import Pesel
+from pesel import Pesel, PeselConst
 import pytest
 
 
@@ -23,7 +23,7 @@ def test_generated_pesel_male(pesel_obj):
 
 
 def test_generated_pesel_year(pesel_obj):
-    pytest.assume(Pesel.YEAR_MIN <= pesel_obj.year <= Pesel.YEAR_MAX)
+    pytest.assume(PeselConst.YEAR_MIN.value <= pesel_obj.year <= PeselConst.YEAR_MAX.value)
 
 
 def test_generated_pesel_month(pesel_obj):
