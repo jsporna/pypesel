@@ -4,7 +4,7 @@ from pesel import Pesel
 
 
 def cli():
-    parser = argparse.ArgumentParser(prog="pesel", usage='%(prog)s command [arguments]')
+    parser = argparse.ArgumentParser(prog="pesel", usage='%(prog)s')
 
     subparser = parser.add_subparsers(dest='command')
     generator = subparser.add_parser('generate', help='Generate PESEL number')

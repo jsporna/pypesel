@@ -1,9 +1,9 @@
 from pesel import Pesel
 import random
-from datetime import datetime
+import time
 import pytest
 
-random.seed(datetime.now())
+random.seed(time.time())
 
 
 @pytest.fixture(scope="session")
