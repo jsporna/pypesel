@@ -3,6 +3,7 @@
 import random
 import time
 import calendar
+from typing import Union, Optional
 from enum import Enum
 
 
@@ -17,7 +18,7 @@ class PeselConst(Enum):
 class Pesel:
     """Pesel Class to serve or generate PESEL number"""
 
-    def __init__(self, pesel):
+    def __init__(self, pesel: Union[str, int]):
         """Create a new PESEL instance
         :param pesel: PESEL number
         :type pesel: str
@@ -25,10 +26,10 @@ class Pesel:
         """
         if not Pesel.validate(pesel):
             raise ValueError("Provided PESEL number is not valid")
-        self._pesel = pesel
+        self._pesel = str(pesel)
 
     @staticmethod
-    def validate(pesel):
+    def validate(pesel: Union[str, int]) -> bool:
         """Validate given PESEL number
         :param pesel: PESEL number
         :type pesel: str
@@ -112,13 +113,14 @@ class Pesel:
         return f'{self.__class__.__name__}("{self._pesel}")'
 
     @staticmethod
-    def checksum(pesel):
+    def checksum(pesel: Union[str, int]) -> str:
         """Calculate checksum for provided pesel (with or without checksum) and returns check digit
         :param pesel: PESEL number
         :type pesel: str
         :return: check digit
         :rtype str
         """
+        pesel = str(pesel)
         if len(pesel) not in (10, 11):
             raise ValueError("Pesel should have 10 or 11 digits")
         checksum = 0
@@ -127,13 +129,13 @@ class Pesel:
         return str((10 - (checksum % 10)) % 10)
 
     @staticmethod
-    def __month_offset(year):
+    def __month_offset(year: int) -> int:
         calculated_offset = (year // 100 - 4) % 5 * 20
         return calculated_offset if calculated_offset >= 0 else 100 + calculated_offset
 
     @classmethod
-    def generate(cls, male: bool = None,
-                 year: int = None, month: int = None, day: int = None):
+    def generate(cls, male: Optional[bool] = None,
+                 year: Optional[int] = None, month: Optional[int] = None, day: Optional[int] = None):
         """Generate random PESEL number and create instance of class Pesel
 
         :param male: True for male, False for female
@@ -147,35 +149,41 @@ class Pesel:
         :return: instance of class Pesel
         :rtype: pesel.Pesel
         """
-        random.seed(time.time())
+        if year and day == 29 and month == 2 and not calendar.isleap(year):
+            raise ValueError(f'Year {year} is not leap so February has only 28 days')
 
+        random.seed(time.time())
         gender = int(male) if male is not None else random.randint(0, 1)
 
         _year = year if year is not None else random.randint(PeselConst.YEAR_MIN.value, PeselConst.YEAR_MAX.value)
         if not PeselConst.YEAR_MIN.value <= _year <= PeselConst.YEAR_MAX.value:
-            raise ValueError(f'Year should have value between {PeselConst.YEAR_MIN.value} & {PeselConst.YEAR_MAX.value}')
+            raise ValueError(
+                f'Year should have value between {PeselConst.YEAR_MIN.value} & {PeselConst.YEAR_MAX.value}')
 
-        _month = month if month is not None else random.randint(1, 12)
-        if not 1 <= _month <= 12:
-            raise ValueError('Month should have value between 1 and 12')
+        if day is None:
+            _month = month if month is not None else random.randint(1, 12)
+            if not 1 <= _month <= 12:
+                raise ValueError('Month should have value between 1 and 12')
+
+            max_day = calendar.monthrange(_year, _month)[1]
+            _day = random.randint(1, max_day)
+        else:
+            if not month:
+                try:
+                    _month = random.choice([idx for idx, days in enumerate(calendar.mdays) if days >= day > 0])
+                except IndexError:
+                    raise ValueError('Day should have value between 1 and 31')
+            else:
+                _month = month
+
+            if not 1 <= _month <= 12:
+                raise ValueError('Month should have value between 1 and 12, {}'.format(_month))
+
+            _day = day
 
         max_day = calendar.monthrange(_year, _month)[1]
-        if day and not month and day > max_day:
-            if day == 31:
-                _month = random.choice((1, 3, 5, 7, 8, 10, 12))
-            if day == 30:
-                _month = random.choice((1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
-
-        if day == 29 and not year and day > max_day:
-            while True:
-                _year = random.randint(PeselConst.YEAR_MIN.value, PeselConst.YEAR_MAX.value)
-                if calendar.isleap(_year):
-                    break
-
-        max_day = calendar.monthrange(_year, _month)[1]
-        _day = day if day is not None else random.randint(1, max_day)
         if not 1 <= _day <= max_day:
-            raise ValueError('Day should have value between 1 and {}'.format(max_day))
+            raise ValueError('Day should have value between 1 and {} for month {}'.format(max_day, _month))
 
         pesel = "{:02d}{:02d}{:02d}{:03d}{}".format(
             _year % 100,
