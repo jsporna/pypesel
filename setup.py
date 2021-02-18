@@ -10,7 +10,7 @@ def load_long_description():
 
 setup(
     name='pesel',
-    version='0.2.1',
+    version='0.3.0',
     description='Polish PESEL',
     long_description=load_long_description(),
     long_description_content_type='text/markdown',

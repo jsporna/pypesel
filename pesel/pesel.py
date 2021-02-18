@@ -3,11 +3,13 @@
 import random
 import time
 import calendar
+from datetime import date, datetime
 from typing import Union, Optional
 from enum import Enum
 
 
 class PeselConst(Enum):
+    """PeselConst Class contains magic numbers for Pesel Class"""
     YEAR_BASE = 1900
     YEAR_MIN = 1800
     YEAR_MAX = 2299
@@ -75,6 +77,10 @@ class Pesel:
         return int(self._pesel[4:6])
 
     @property
+    def date(self) -> date:
+        return date(self.year, self.month, self.day)
+
+    @property
     def male(self) -> bool:
         """Get if PESEL number describes male person
         :return: True if PESEL number describes male person else False
@@ -110,7 +116,40 @@ class Pesel:
         return self._pesel
 
     def __repr__(self):
-        return f'{self.__class__.__name__}("{self._pesel}")'
+        return f'{self.__class__.__name__}({self._pesel})'
+
+    def __eq__(self, other):
+        if isinstance(other, Pesel):
+            return self.value == other.value
+        if isinstance(other, (str, int)):
+            return self.value == str(other)
+        if isinstance(other, datetime):
+            other = other.date()
+        if isinstance(other, date):
+            return self.date == other
+        return False
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __gt__(self, other):
+        if isinstance(other, Pesel):
+            return self.date > other.date
+        if isinstance(other, datetime):
+            other = other.date()
+        if isinstance(other, date):
+            return self.date > other
+        return False
+
+    def __ge__(self, other):
+        return self == other or self > other
+
+    def __le__(self, other):
+        return not self > other
+
+    def __lt__(self, other):
+        return not self >= other
+
 
     @staticmethod
     def checksum(pesel: Union[str, int]) -> str:
@@ -171,8 +210,8 @@ class Pesel:
             if not month:
                 try:
                     _month = random.choice([idx for idx, days in enumerate(calendar.mdays) if days >= day > 0])
-                except IndexError:
-                    raise ValueError('Day should have value between 1 and 31')
+                except IndexError as err:
+                    raise ValueError('Day should have value between 1 and 31') from err
             else:
                 _month = month
 
