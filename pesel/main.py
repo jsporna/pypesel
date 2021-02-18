@@ -1,9 +1,11 @@
+"""Module is providing support for CLI"""
 import argparse
 import sys
 from pesel import Pesel
 
 
 def cli():
+    """Support CLI commands and arguments"""
     parser = argparse.ArgumentParser(prog="pesel", usage='%(prog)s')
 
     subparser = parser.add_subparsers(dest='command')
