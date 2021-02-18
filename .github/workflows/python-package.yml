@@ -25,3 +25,9 @@ jobs:
 
       - name: Test with pytest
         run: pytest --cov=pesel tests/
+
+      - name: Codecov - Process coverage
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          verbose: true
