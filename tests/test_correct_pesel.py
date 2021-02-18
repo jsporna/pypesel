@@ -1,9 +1,21 @@
 from pesel import Pesel
+from datetime import date, datetime
+import time
 import pytest
 
 
-@pytest.fixture(scope='session', params=["65432101239"])
+@pytest.fixture(scope='session', params=["65432101239", 65432101239])
 def pesel_value(request):
+    return request.param
+
+
+@pytest.fixture(scope='session', params=["65432101239", 65432101239])
+def same_pesel_value(request):
+    return request.param
+
+
+@pytest.fixture(scope='session', params=["64301501235", 64301501235])
+def other_pesel_value(request):
     return request.param
 
 
@@ -13,7 +25,95 @@ def pesel_obj(pesel_value):
 
 
 def test_correct_pesel(pesel_obj, pesel_value):
-    pytest.assume(pesel_obj.value == pesel_value)
+    pytest.assume(pesel_obj.value == str(pesel_value))
+
+
+def test_correct_pesel_repr(pesel_obj, pesel_value):
+    assert repr(pesel_obj) == f"Pesel({pesel_value})"
+
+
+def test_correct_pesel_date(pesel_obj):
+    assert pesel_obj.date == date(pesel_obj.year, pesel_obj.month, pesel_obj.day)
+
+
+def test_correct_pesel_eq_pesel(pesel_value, same_pesel_value):
+    assert Pesel(pesel_value) == Pesel(same_pesel_value)
+
+
+def test_correct_pesel_eq_str_int(pesel_value, same_pesel_value):
+    assert Pesel(pesel_value) == same_pesel_value
+
+
+def test_correct_pesel_eq_date(pesel_obj):
+    assert pesel_obj == date(pesel_obj.year, pesel_obj.month, pesel_obj.day)
+
+
+def test_correct_pesel_eq_dateime(pesel_obj):
+    assert pesel_obj == datetime(pesel_obj.year, pesel_obj.month, pesel_obj.day, 0, 0, 0)
+
+
+def test_correct_pesel_eq_time(pesel_obj):
+    assert not pesel_obj == time.time()
+
+
+def test_correct_pesel_neq_other(pesel_value, other_pesel_value):
+    assert Pesel(pesel_value) != other_pesel_value
+
+
+def test_correct_pesel_gt_pesel(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(pesel_value) > Pesel(other_pesel_value)
+        assert not (Pesel(pesel_value) > Pesel(same_pesel_value))
+
+
+def test_correct_pesel_gt_datetime(pesel_obj):
+    assert not pesel_obj > datetime(pesel_obj.year, pesel_obj.month, pesel_obj.day, 0, 0, 0)
+
+
+def test_correct_pesel_gt_time(pesel_obj):
+    assert not pesel_obj > time.time()
+
+
+def test_correct_pesel_gt_date(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(pesel_value) > Pesel(other_pesel_value).date
+        assert not (Pesel(pesel_value) > Pesel(same_pesel_value).date)
+
+
+def test_correct_pesel_lt_pesel(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(other_pesel_value) < Pesel(pesel_value)
+        assert not (Pesel(same_pesel_value) < Pesel(pesel_value))
+
+
+def test_correct_pesel_lt_date(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(other_pesel_value) < Pesel(pesel_value).date
+        assert not (Pesel(same_pesel_value) < Pesel(pesel_value).date)
+
+
+def test_correct_pesel_ge_pesel(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(pesel_value) >= Pesel(other_pesel_value)
+        assert Pesel(pesel_value) >= Pesel(same_pesel_value)
+
+
+def test_correct_pesel_ge_date(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(pesel_value) >= Pesel(other_pesel_value).date
+        assert Pesel(pesel_value) >= Pesel(same_pesel_value).date
+
+
+def test_correct_pesel_le_pesel(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(other_pesel_value) <= Pesel(pesel_value)
+        assert Pesel(same_pesel_value) <= Pesel(pesel_value)
+
+
+def test_correct_pesel_le_date(pesel_value, other_pesel_value, same_pesel_value):
+    with pytest.assume:
+        assert Pesel(other_pesel_value) <= Pesel(pesel_value).date
+        assert Pesel(same_pesel_value) <= Pesel(pesel_value).date
 
 
 @pytest.mark.parametrize(['pesel', 'gender'], (
