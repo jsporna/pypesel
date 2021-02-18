@@ -4,6 +4,10 @@ PESEL Python module
 
 PESEL is the national identification number used in Poland since 1979. It always has 11 digits, identifies just one person and cannot be changed to another one (except some specific situations such as gender reassignment).
 
+[![Test](https://github.com/jsporna/pypesel/workflows/Test/badge.svg)](https://github.com/jsporna/pypesel/actions?query=workflow%3ATest)
+[![codecov](https://codecov.io/gh/jsporna/pypesel/branch/develop/graph/badge.svg?token=0ZQP387S65)](https://codecov.io/gh/jsporna/pypesel)
+[![PyPI version](https://badge.fury.io/py/pesel.svg)](https://badge.fury.io/py/pesel)
+
 ## Installation
 
 ```shell
