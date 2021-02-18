@@ -5,13 +5,26 @@
 #    pip-compile --output-file=requirements-dev.txt requirements-dev.in
 #
 attrs==20.3.0
-    # via pytest
+    # via
+    #   hypothesis
+    #   pytest
+certifi==2020.12.5
+    # via requests
+chardet==4.0.0
+    # via requests
+codecov==2.1.11
+    # via -r requirements-dev.in
 coverage==5.4
     # via
     #   -r requirements-dev.in
+    #   codecov
     #   pytest-cov
 flake8==3.8.4
     # via -r requirements-dev.in
+hypothesis==6.2.0
+    # via -r requirements-dev.in
+idna==2.10
+    # via requests
 iniconfig==1.1.1
     # via pytest
 mccabe==0.6.1
@@ -37,7 +50,13 @@ pytest==6.2.2
     #   -r requirements-dev.in
     #   pytest-assume
     #   pytest-cov
+requests==2.25.1
+    # via codecov
 six==1.15.0
     # via pytest-assume
+sortedcontainers==2.3.0
+    # via hypothesis
 toml==0.10.2
     # via pytest
+urllib3==1.26.3
+    # via requests
