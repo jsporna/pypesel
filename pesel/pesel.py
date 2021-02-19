@@ -121,13 +121,17 @@ class Pesel:
     def __eq__(self, other):
         if isinstance(other, Pesel):
             return self.value == other.value
-        if isinstance(other, (str, int)):
+        if isinstance(other, str):
+            return self.value == other
+        if isinstance(other, float):
+            return self.value == str(int(other))
+        if isinstance(other, int):
             return self.value == str(other)
         if isinstance(other, datetime):
             other = other.date()
         if isinstance(other, date):
             return self.date == other
-        return False
+        return NotImplemented
 
     def __ne__(self, other):
         return not self == other
@@ -139,7 +143,7 @@ class Pesel:
             other = other.date()
         if isinstance(other, date):
             return self.date > other
-        return False
+        return NotImplemented
 
     def __ge__(self, other):
         return self == other or self > other
