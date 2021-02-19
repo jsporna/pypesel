@@ -52,8 +52,8 @@ def test_correct_pesel_eq_dateime(pesel_obj):
     assert pesel_obj == datetime(pesel_obj.year, pesel_obj.month, pesel_obj.day, 0, 0, 0)
 
 
-def test_correct_pesel_eq_time(pesel_obj):
-    assert not pesel_obj == time.time()
+def test_correct_pesel_eq_float(pesel_obj):
+    assert pesel_obj == float(pesel_obj.value)
 
 
 def test_correct_pesel_neq_other(pesel_value, other_pesel_value):
@@ -70,8 +70,19 @@ def test_correct_pesel_gt_datetime(pesel_obj):
     assert not pesel_obj > datetime(pesel_obj.year, pesel_obj.month, pesel_obj.day, 0, 0, 0)
 
 
-def test_correct_pesel_gt_time(pesel_obj):
-    assert not pesel_obj > time.time()
+def test_correct_pesel_gt_float(pesel_obj):
+    with pytest.raises(TypeError):
+        assert pesel_obj > 1.23456789
+
+
+def test_correct_pesel_gt_tuple(pesel_obj):
+    with pytest.raises(TypeError):
+        assert pesel_obj > (1, 2)
+
+
+def test_correct_pesel_gt_list(pesel_obj):
+    with pytest.raises(TypeError):
+        assert pesel_obj > [1, 2]
 
 
 def test_correct_pesel_gt_date(pesel_value, other_pesel_value, same_pesel_value):
