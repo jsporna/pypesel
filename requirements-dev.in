@@ -1,8 +1,0 @@
--r ./requirements.txt
-flake8
-codecov
-coverage
-pytest
-pytest-cov
-pytest-assume
-hypothesis

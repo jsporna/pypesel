@@ -1,10 +1,10 @@
 .PHONY: clean test package
 
 clean:
-	rm -rf build dist pesel.egg-info
+	rm -rf dist
 
 test:
-	pytest --cov-report --cov=pesel tests/
+	poetry run pytest --cov-report term-missing --cov=pesel tests/
 
 package:
-	python setup.py sdist bdist_wheel
+	poetry build

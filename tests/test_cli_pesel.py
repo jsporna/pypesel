@@ -1,12 +1,14 @@
-from pesel.main import cli
-import pytest
 import random
 import time
+
+import pytest
+
+from pesel.main import cli
 
 random.seed(time.time())
 
 
-@pytest.mark.parametrize('mock', [_ for _ in range(3)])
+@pytest.mark.parametrize("mock", [_ for _ in range(3)])
 def test_cli_pesel_generate(monkeypatch, capsys, mock):
     monkeypatch.setattr("sys.argv", ["pesel", "generate"])
     cli()
@@ -47,7 +49,9 @@ def test_cli_pesel_generate_day(monkeypatch, capsys, day):
 @pytest.mark.parametrize("year", [random.randrange(1800, 2299) for _ in range(3)])
 @pytest.mark.parametrize("month", [random.randrange(1, 12) for _ in range(3)])
 def test_cli_pesel_generate_year_month(monkeypatch, capsys, year, month):
-    monkeypatch.setattr("sys.argv", ["pesel", "generate", "--year", str(year), "--month", str(month)])
+    monkeypatch.setattr(
+        "sys.argv", ["pesel", "generate", "--year", str(year), "--month", str(month)]
+    )
     cli()
     out, _ = capsys.readouterr()
     with pytest.assume:
@@ -59,7 +63,9 @@ def test_cli_pesel_generate_year_month(monkeypatch, capsys, year, month):
 @pytest.mark.parametrize("year", [random.randrange(1800, 2299) for _ in range(3)])
 @pytest.mark.parametrize("day", [random.randrange(1, 31) for _ in range(3)])
 def test_cli_pesel_generate_year_day(monkeypatch, capsys, year, day):
-    monkeypatch.setattr("sys.argv", ["pesel", "generate", "--year", str(year), "--day", str(day)])
+    monkeypatch.setattr(
+        "sys.argv", ["pesel", "generate", "--year", str(year), "--day", str(day)]
+    )
     cli()
     out, _ = capsys.readouterr()
     with pytest.assume:
@@ -71,7 +77,9 @@ def test_cli_pesel_generate_year_day(monkeypatch, capsys, year, day):
 @pytest.mark.parametrize("month", [random.randrange(1, 12) for _ in range(3)])
 @pytest.mark.parametrize("day", [random.randrange(1, 28) for _ in range(3)])
 def test_cli_pesel_generate_month_day(monkeypatch, capsys, month, day):
-    monkeypatch.setattr("sys.argv", ["pesel", "generate", "--month", str(month), "--day", str(day)])
+    monkeypatch.setattr(
+        "sys.argv", ["pesel", "generate", "--month", str(month), "--day", str(day)]
+    )
     cli()
     out, _ = capsys.readouterr()
     with pytest.assume:
@@ -84,7 +92,19 @@ def test_cli_pesel_generate_month_day(monkeypatch, capsys, month, day):
 @pytest.mark.parametrize("month", [random.randrange(1, 12) for _ in range(3)])
 @pytest.mark.parametrize("day", [random.randrange(1, 28) for _ in range(3)])
 def test_cli_pesel_generate_year_month_day(monkeypatch, capsys, year, month, day):
-    monkeypatch.setattr("sys.argv", ["pesel", "generate", "--year", str(year), "--month", str(month), "--day", str(day)])
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "pesel",
+            "generate",
+            "--year",
+            str(year),
+            "--month",
+            str(month),
+            "--day",
+            str(day),
+        ],
+    )
     cli()
     out, _ = capsys.readouterr()
     with pytest.assume:
@@ -96,7 +116,9 @@ def test_cli_pesel_generate_year_month_day(monkeypatch, capsys, year, month, day
 
 @pytest.mark.parametrize("male", [random.randint(0, 1) for _ in range(3)])
 def test_cli_pesel_generate_male(monkeypatch, capsys, male):
-    monkeypatch.setattr("sys.argv", ["pesel", "generate", "--{}male".format("" if male else "fe")])
+    monkeypatch.setattr(
+        "sys.argv", ["pesel", "generate", "--{}male".format("" if male else "fe")]
+    )
     cli()
     out, _ = capsys.readouterr()
     with pytest.assume:

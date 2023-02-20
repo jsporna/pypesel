@@ -1,8 +1,9 @@
-from pesel import Pesel, PeselConst
 import pytest
 
+from pesel import Pesel, PeselConst
 
-@pytest.fixture(scope='session', params=[Pesel.generate() for _ in range(100)])
+
+@pytest.fixture(scope="session", params=[Pesel.generate() for _ in range(100)])
 def pesel_obj(request):
     return request.param
 
@@ -15,7 +16,7 @@ def test_generated_pesel(pesel_obj):
 
 
 def test_generated_pesel_gender(pesel_obj):
-    pytest.assume(pesel_obj.gender in ('male', 'female'))
+    pytest.assume(pesel_obj.gender in ("male", "female"))
 
 
 def test_generated_pesel_male(pesel_obj):
@@ -23,7 +24,9 @@ def test_generated_pesel_male(pesel_obj):
 
 
 def test_generated_pesel_year(pesel_obj):
-    pytest.assume(PeselConst.YEAR_MIN.value <= pesel_obj.year <= PeselConst.YEAR_MAX.value)
+    pytest.assume(
+        PeselConst.YEAR_MIN.value <= pesel_obj.year <= PeselConst.YEAR_MAX.value
+    )
 
 
 def test_generated_pesel_month(pesel_obj):

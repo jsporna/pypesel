@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "pypesel"
+version = "0.4.0"
+description = ""
+authors = ["Jakub Spórna <jakub.sporna@gmail.com>"]
+packages = [
+    {include = "pesel", from = "src"},
+]
+
+[tools.black]
+line-length = 120
+
+[tools.isort]
+force_single_line = true
+line_length = 120
+profile = "black"
+py_vesrion = 39
+src_paths = [
+    "src",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^5.0.4"
+codecov = "^2.1.12"
+coverage = "^6.4.4"
+pytest = "^7.1.3"
+pytest-cov = "^3.0.0"
+pytest-assume = "^2.4.3"
+hypothesis = "^6.54.5"
+black = "^22.8.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+pesel = "pesel.main:cli"

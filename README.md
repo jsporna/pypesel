@@ -46,12 +46,12 @@ optional arguments:
 ```
 
 ```shell
-❯ pesel generate  
+❯ pesel generate
 62512426682
 ```
 
 ```shell
-❯ pesel validate --help  
+❯ pesel validate --help
 usage: pesel validate [-h] pesel
 
 positional arguments:
