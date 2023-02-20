@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pypesel"
+name = "pesel"
 version = "0.4.0"
 description = ""
 authors = ["Jakub Spórna <jakub.sporna@gmail.com>"]
